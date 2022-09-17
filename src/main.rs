@@ -94,6 +94,7 @@ fn main() {
     v3_swz.r("xxxx").v3();*/
 
     let swz = v3_swz.s3("xxx");
+
     assert_eq!(v3_swz.s3("xxx"), Vec3(3.0, 3.0, 3.0));
     assert_eq!(v3_swz.s3("yyy"), Vec3(5.0, 5.0, 5.0));
     assert_eq!(v3_swz.s2("xx"), Vec2(3.0, 3.0));
