@@ -10,6 +10,12 @@ use crate::vecx::VecX;
 #[derive(Debug, Clone, Copy)]
 pub struct Vec2(pub f64, pub f64);
 
+impl Default for Vec2 {
+    fn default() -> Self {
+        Vec2(0.0, 0.0)
+    }
+}
+
 impl Vec2 {
     pub fn x(&self) -> f64 {
         self.0
@@ -17,6 +23,13 @@ impl Vec2 {
 
     pub fn y(&self) -> f64 {
         self.1
+    }
+}
+
+impl FromIterator<f64> for Vec2 {
+    fn from_iter<T: IntoIterator<Item = f64>>(iter: T) -> Self {
+        let values: Vec<f64> = iter.into_iter().collect();
+        Vec2::from(values)
     }
 }
 
@@ -49,14 +62,18 @@ impl VecX for Vec2 {
             'x' => self.0,
             'y' => self.1,
             _ => panic!(
-                "Trying to access invalid component '{}' of {:?}",
+                "Attempt to access invalid component '{}' of {:?}",
                 component, self
             ),
         }
     }
 
     fn at(&self, idx: usize) -> f64 {
-        self[idx]
+        if idx < 2 {
+            self[idx]
+        } else {
+            0.0
+        }
     }
 
     /*
@@ -295,10 +312,7 @@ impl Index<usize> for Vec2 {
         match idx {
             0 => &self.0,
             1 => &self.1,
-            _ => panic!(
-                "Warning: accessing vector {} by invalid index {}",
-                idx, self
-            ),
+            _ => panic!("Attempt to access vector {} by invalid index {}", self, idx),
         }
     }
 }

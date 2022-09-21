@@ -8,6 +8,12 @@ use std::ops::{self, Index};
 #[derive(Debug, Clone, Copy)]
 pub struct Vec3(pub f64, pub f64, pub f64);
 
+impl Default for Vec3 {
+    fn default() -> Self {
+        Vec3(0.0, 0.0, 0.0)
+    }
+}
+
 impl Vec3 {
     pub fn x(&self) -> f64 {
         self.0
@@ -19,6 +25,48 @@ impl Vec3 {
 
     pub fn z(&self) -> f64 {
         self.2
+    }
+
+    pub fn rot(&self, rot: Vec3) -> Vec3 {
+        let mut rotated = self.rot_x(rot.x());
+        rotated = rotated.rot_y(rot.y());
+        rotated = rotated.rot_z(rot.z());
+        rotated
+    }
+
+    pub fn rot_x(&self, angle: f64) -> Self {
+        Vec3(
+            self.x(),
+            self.y() * f64::cos(angle) + self.z() * f64::sin(angle),
+            self.y() * f64::sin(angle) - self.z() * f64::cos(angle),
+        )
+    }
+
+    pub fn rot_y(&self, angle: f64) -> Self {
+        Vec3(
+            self.x() * f64::cos(angle) - self.z() * f64::sin(angle),
+            self.y(),
+            self.x() * f64::sin(angle) + self.z() * f64::cos(angle),
+        )
+    }
+
+    pub fn rot_z(&self, angle: f64) -> Self {
+        Vec3(
+            self.x() * f64::cos(angle) - self.y() * f64::sin(angle),
+            self.x() * f64::sin(angle) + self.y() * f64::cos(angle),
+            self.z(),
+        )
+    }
+
+    pub fn z_sub(&mut self, val: f64) {
+        self.2 -= val;
+    }
+}
+
+impl FromIterator<f64> for Vec3 {
+    fn from_iter<T: IntoIterator<Item = f64>>(iter: T) -> Self {
+        let values: Vec<f64> = iter.into_iter().collect();
+        Vec3::from(values)
     }
 }
 
@@ -58,16 +106,20 @@ impl VecX for Vec3 {
             'g' => self.1,
             'b' => self.2,
             _ => {
-                eprintln!(
-                    "Warning: Trying to access invalid component '{}' on Vec3",
-                    component
-                );
-                0.0
+                panic!(
+                    "Attempt to access invalid component '{}' of {:?}",
+                    component, self
+                )
             }
         }
     }
+
     fn at(&self, idx: usize) -> f64 {
-        self[idx]
+        if idx < 3 {
+            self[idx]
+        } else {
+            0.0
+        }
     }
 
     /*
@@ -105,9 +157,9 @@ impl ops::Add<Vec3> for Vec3 {
 
 impl ops::AddAssign<Vec3> for Vec3 {
     fn add_assign(&mut self, rhs: Vec3) {
-        self.0 -= rhs.0;
-        self.1 -= rhs.0;
-        self.2 -= rhs.2;
+        self.0 += rhs.0;
+        self.1 += rhs.1;
+        self.2 += rhs.2;
     }
 }
 

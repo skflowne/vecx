@@ -1,13 +1,39 @@
-use std::{fmt::Display, ops::Sub};
+use std::{
+    fmt::Display,
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
+};
 
 use crate::{Vec2, Vec3};
 
-pub trait VecX:
-    Copy + Sub<Self, Output = Self> + From<f64> + From<Vec2> + From<Vec3> + From<Vec<f64>> + Display
+pub trait VecX: 
+    Copy 
+    + Display
+    // operations
+    + Add<Self, Output = Self>
+    + Sub<Self, Output = Self>
+    + Mul<Self, Output = Self>
+    + Mul<f64, Output = Self>
+    + Div<Self, Output = Self>
+    + Div<f64, Output = Self>
+    + Rem<Self, Output = Self>
+    + Rem<f64, Output = Self>
+    // assignments
+    + AddAssign<Self>
+    + SubAssign<Self>
+    + MulAssign<Self>
+    + MulAssign<f64>
+    + DivAssign<Self>
+    + DivAssign<f64>
+    + RemAssign<Self>
+    + RemAssign<f64>
+    // from
+    + From<f64>
+    + From<Vec2>
+    + From<Vec3>
+    + From<Vec<f64>>
+    + FromIterator<f64>
 {
-    fn size() -> usize
-    where
-        Self: Sized;
+    fn size() -> usize where Self: Sized;
 
     /*
         Maths
@@ -42,8 +68,10 @@ pub trait VecX:
     /// Returns the current vector's values as an array of `f64`
     /// # Examples
     /// ```
+    /// use vecx::{Vec2, Vec3, VecX};
+    /// 
     /// let v = Vec2(1.0, 2.0);
-    /// assert_eq!(v.as_values_of<Vec3>(), vec![1.0_f64, 2.0_f64, 0.0_f64])
+    /// assert_eq!(v.as_values_of::<Vec3>(), vec![1.0_f64, 2.0_f64, 0.0_f64])
     /// ```
     fn as_values_of<T: VecX>(&self) -> Vec<f64> {
         let mut values = Vec::<f64>::new();
@@ -57,14 +85,16 @@ pub trait VecX:
     /// Alias for s::<Vec2>(xy)
     /// # Examples
     /// ```
+    /// use vecx::{Vec2, Vec3, VecX};
+    /// 
     /// let v2 = Vec2(0.0, 1.0);
-    /// let v3 = Vec2(0.0, 1.0, 2.0);
+    /// let v3 = Vec3(0.0, 1.0, 2.0);
     ///
-    /// assert_eq!(v2.s2("xx"), Vec2(0.0, 0.0))
-    /// assert_eq!(v3.s2("zz"), Vec2(2.0, 2.0))
+    /// assert_eq!(v2.s2("xx"), Vec2(0.0, 0.0));
+    /// assert_eq!(v3.s2("zz"), Vec2(2.0, 2.0));
     ///
-    /// assert_eq!(v3.s2("zx"), Vec2(2.0, 0.0))
-    /// assert_eq!(v3.s2("rg"), Vec2(0.0, 1.0))
+    /// assert_eq!(v3.s2("zx"), Vec2(2.0, 0.0));
+    /// assert_eq!(v3.s2("rg"), Vec2(0.0, 1.0));
     /// ```
     fn s2(&self, xy: &str) -> Vec2 {
         self.s::<Vec2>(xy)
@@ -74,14 +104,16 @@ pub trait VecX:
     /// Alias for s::<Vec3>(xyz)
     /// # Examples
     /// ```
+    /// use vecx::{Vec2, Vec3, VecX};
+    /// 
     /// let v2 = Vec2(0.0, 1.0);
-    /// let v3 = Vec2(0.0, 1.0, 2.0);
+    /// let v3 = Vec3(0.0, 1.0, 2.0);
     ///
-    /// assert_eq!(v2.s3("xxx"), Vec3(0.0, 0.0, 0.0))
-    /// assert_eq!(v2.s3("xyx"), Vec3(0.0, 1.0, 0.0))
+    /// assert_eq!(v2.s3("xxx"), Vec3(0.0, 0.0, 0.0));
+    /// assert_eq!(v2.s3("xyx"), Vec3(0.0, 1.0, 0.0));
     ///
-    /// assert_eq!(v3.s3("zyx"), Vec2(2.0, 1.0, 0.0))
-    /// assert_eq!(v3.s3("rgb"), Vec2(0.0, 1.0, 2.0))
+    /// assert_eq!(v3.s3("zyx"), Vec3(2.0, 1.0, 0.0));
+    /// assert_eq!(v3.s3("rgb"), Vec3(0.0, 1.0, 2.0));
     /// ```
     fn s3(&self, xyz: &str) -> Vec3 {
         self.s::<Vec3>(xyz)
@@ -90,10 +122,12 @@ pub trait VecX:
     /// Returns a new Vec `T` made of the components of the calling vector
     /// # Examples
     /// ```
+    /// use vecx::{Vec2, Vec3, VecX};
+    /// 
     /// let v2 = Vec2(0.0, 1.0);
     /// let v3: Vec3 = v2.s("xxx");
     ///
-    /// assert_eq(v3, Vec3(0.0, 0.0, 0.0))
+    /// assert_eq!(v3, Vec3(0.0, 0.0, 0.0));
     /// ```
     fn s<T: VecX>(&self, swizzle: &str) -> T {
         if !self.is_valid_swizzle::<T>(swizzle) {
