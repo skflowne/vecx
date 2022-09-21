@@ -27,7 +27,20 @@ impl Vec3 {
         self.2
     }
 
-    pub fn rot(&self, rot: Vec3) -> Vec3 {
+    /// Returns a Vec3 that's orthogonal to `self` and `other`.
+    ///
+    /// Remember this operation is not commutative.
+    pub fn cross(&self, other: &Self) -> Self {
+        let a = self;
+        let b = other;
+        Self(
+            a.y() * b.z() - a.z() * b.y(),
+            a.z() * b.x() - a.x() * b.z(),
+            a.x() * b.y() - a.y() * b.x(),
+        )
+    }
+
+    pub fn rot(&self, rot: &Vec3) -> Vec3 {
         let mut rotated = self.rot_x(rot.x());
         rotated = rotated.rot_y(rot.y());
         rotated = rotated.rot_z(rot.z());
@@ -57,10 +70,6 @@ impl Vec3 {
             self.z(),
         )
     }
-
-    pub fn z_sub(&mut self, val: f64) {
-        self.2 -= val;
-    }
 }
 
 impl FromIterator<f64> for Vec3 {
@@ -74,6 +83,7 @@ impl VecX for Vec3 {
     /*
         Maths
     */
+
     fn dot_product(&self, other: &Self) -> f64 {
         return self.0 * other.0 + self.1 * other.1 + self.2 * other.2;
     }
