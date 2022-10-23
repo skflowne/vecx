@@ -447,6 +447,12 @@ impl From<(f64, Vec2)> for Vec3 {
     }
 }
 
+impl From<Vec4> for Vec3 {
+    fn from(v: Vec4) -> Self {
+        Vec3(v.0, v.1, v.2)
+    }
+}
+
 impl From<Matrix> for Vec3 {
     fn from(mat: Matrix) -> Self {
         if mat.rows() >= 3 && mat.cols() == 1 {

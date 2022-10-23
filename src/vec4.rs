@@ -1,4 +1,4 @@
-use crate::{Vec2, Vec3, VecX};
+use crate::{Matrix, Vec2, Vec3, VecX};
 use std::fmt;
 use std::ops::{self, Index};
 
@@ -462,6 +462,24 @@ impl From<(Vec3, f64)> for Vec4 {
 impl From<(f64, Vec3)> for Vec4 {
     fn from(t: (f64, Vec3)) -> Self {
         Vec4(t.0, t.1.x(), t.1.y(), t.1.z())
+    }
+}
+
+impl From<Matrix> for Vec4 {
+    fn from(m: Matrix) -> Self {
+        if m.cols() == 1 && m.rows() >= 4 {
+            return Vec4(m.get((1, 1)), m.get((2, 1)), m.get((3, 1)), m.get((4, 1)));
+        }
+
+        if m.rows() == 1 && m.cols() >= 4 {
+            return Vec4(m.get((1, 1)), m.get((1, 2)), m.get((1, 3)), m.get((1, 4)));
+        }
+
+        panic!(
+            "Invalid attempt to create Vec4 from {}x{} matrix",
+            m.rows(),
+            m.cols()
+        );
     }
 }
 
