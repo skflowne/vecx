@@ -297,3 +297,12 @@ fn bad_swz_invalid_component_s3() {
 fn bad_swz_invalid_component_s2() {
     Vec3(1.0, 2.0, 3.0).s2("xc");
 }
+
+#[test]
+fn cross() {
+    let a = Vec3(1.0, 0.0, 0.0);
+    let b = Vec3(0.0, 1.0, 0.0);
+
+    assert_eq!(a.cross(&b), Vec3(0.0, 0.0, 1.0));
+    assert_eq!(b.cross(&a), Vec3(0.0, 0.0, -1.0));
+}

@@ -53,9 +53,23 @@ pub trait VecX:
     fn angle(&self, other: &Self) -> f64 {
         return f64::acos(self.dot(other));
     }
+
+    /// Returns the dot product of both **normalized** vectors.
+    /// 
+    /// Use `dot_product` if you need the dot product of the actual vectors
+    /// 
+    /// The result will be between -1.0 and 1.0
+    /// 
+    /// -1.0: Vectors are opposites
+    /// 
+    /// 0.0: Vectors are orthogonal
+    /// 
+    /// 1.0: Vectors are codirectional
     fn dot(&self, other: &Self) -> f64 {
         return self.normalized().dot_product(&other.normalized());
     }
+
+
     fn dot_product(&self, other: &Self) -> f64;
     fn normalized(&self) -> Self;
 
