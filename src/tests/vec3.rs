@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::Vec3;
+use crate::{Matrix, Vec3};
 
 use std::f64::INFINITY;
 
@@ -305,4 +305,13 @@ fn cross() {
 
     assert_eq!(a.cross(&b), Vec3(0.0, 0.0, 1.0));
     assert_eq!(b.cross(&a), Vec3(0.0, 0.0, -1.0));
+}
+
+#[test]
+fn from_matrix() {
+    let mat_3x1 = Matrix::from(vec![vec![1.1], vec![2.1], vec![3.1]]);
+    assert_eq!(Vec3::from(mat_3x1), Vec3(1.1, 2.1, 3.1));
+
+    let mat_1x3 = Matrix::from(vec![vec![1.1, 1.2, 1.3]]);
+    assert_eq!(Vec3::from(mat_1x3), Vec3(1.1, 1.2, 1.3));
 }

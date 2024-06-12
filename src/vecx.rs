@@ -3,7 +3,19 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign},
 };
 
-use crate::{Vec2, Vec3};
+use crate::{Vec2, Vec3, Vec4};
+
+pub fn vec_dot(a: Vec<f64>, b: Vec<f64>) -> f64 {
+        if a.len() != b.len() {
+            panic!("Invalid dot product: length of a is {} != length of b {}", a.len(), b.len());
+        }
+
+        let mut result = 0.0;
+        for i in 0..a.len() {
+            result += a[i] * b[i]
+        }
+        result
+    }
 
 pub trait VecX: 
     Copy 
@@ -71,6 +83,7 @@ pub trait VecX:
 
 
     fn dot_product(&self, other: &Self) -> f64;
+
     fn normalized(&self) -> Self;
 
     /*
@@ -131,6 +144,29 @@ pub trait VecX:
     /// ```
     fn s3(&self, xyz: &str) -> Vec3 {
         self.s::<Vec3>(xyz)
+    }
+
+    /// Returns a new Vec4 made of the components of the calling vector
+    /// Alias for s::<Vec4>(xyz)
+    /// # Examples
+    /// ```
+    /// use vecx::{Vec2, Vec3, Vec4, VecX};
+    /// 
+    /// let v2 = Vec2(0.0, 1.0);
+    /// let v3 = Vec3(0.0, 1.0, 2.0);
+    /// let v4 = Vec4(0.0, 1.0, 2.0, 3.0);
+    ///
+    /// assert_eq!(v2.s4("xxxx"), Vec4(0.0, 0.0, 0.0, 0.0));
+    /// assert_eq!(v2.s4("xyxy"), Vec4(0.0, 1.0, 0.0, 1.0));
+    ///
+    /// assert_eq!(v3.s4("xzyx"), Vec4(0.0, 2.0, 1.0, 0.0));
+    /// assert_eq!(v3.s4("rgbr"), Vec4(0.0, 1.0, 2.0, 0.0));
+    /// 
+    /// assert_eq!(v4.s4("wwww"), Vec3(3.0, 3.0, 3.0, 3.0));
+    /// assert_eq!(v4.s4("aaaa"), Vec3(3.0, 3.0, 3.0, 3.0));
+    /// ```
+    fn s4(&self, xyzw: &str) -> Vec4 {
+        self.s::<Vec4>(xyzw)
     }
 
     /// Returns a new Vec `T` made of the components of the calling vector
