@@ -66,6 +66,12 @@ fn sub_assign() {
 }
 
 #[test]
+fn neg() {
+    assert_eq!(Vec3(-1.0, -2.0, -3.0), -Vec3(1.0, 2.0, 3.0));
+    assert_eq!(-Vec3(-1.0, -1.0, 0.0), Vec3(1.0, 1.0, 0.0));
+}
+
+#[test]
 fn mul() {
     let v = Vec3(1.0, 2.0, 3.0);
     assert_eq!(v * Vec3(-1.0, -2.0, -3.0), Vec3(-1.0, -4.0, -9.0));
