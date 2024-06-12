@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::{Matrix, Vec3};
+use crate::{Matrix, Vec3, Vec4};
 
 use std::f64::INFINITY;
 
@@ -12,9 +12,10 @@ fn from_f64() {
 }
 
 #[test]
-fn from_vec() {
+fn from_vecx() {
     assert_eq!(Vec3::from(Vec2(1.0, 2.0)), Vec3(1.0, 2.0, 0.0));
     assert_eq!(Vec3::from(Vec3(1.0, 2.0, 3.0)), Vec3(1.0, 2.0, 3.0));
+    assert_eq!(Vec3::from(Vec4(1.0, 2.0, 3.0, 4.0)), Vec3(1.0, 2.0, 3.0));
 }
 
 #[test]
